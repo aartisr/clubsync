@@ -131,7 +131,34 @@ In the project root, you can run:
 
 ## Production Build & Deployment
 
-To build and run ClubSync for production:
+### Option A: 1-Click / Zero-Config Deploy to Vercel (Recommended)
+
+ClubSync is fully optimized and pre-configured for **Vercel** with zero manual configuration needed:
+
+- **Frontend**: Vite 6 builds static production bundles into `dist/` and handles SPA routing via `vercel.json`.
+- **API Backend**: The AI assistant and customization endpoints (`/api/ai/chat`, `/api/ai/customize-script`, `/api/health`) are deployed as Vercel Serverless Functions via `/api/index.ts`.
+
+#### Steps to Deploy on Vercel:
+
+1. **Import Project to Vercel**:
+   - Go to [vercel.com/new](https://vercel.com/new).
+   - Select your GitHub repository (`aartisr/clubsync`).
+2. **Framework & Settings**:
+   - Vercel automatically detects the Vite framework and reads the included `vercel.json`.
+   - **Framework Preset**: `Vite`
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+3. **Environment Variables**:
+   - Under **Environment Variables**, add:
+     - `GEMINI_API_KEY`: *(Your Google Gemini API Key from Google AI Studio)*
+4. **Deploy**:
+   - Click **Deploy**. Vercel will build the frontend and provision the serverless API routes in ~30 seconds.
+
+---
+
+### Option B: Standalone Node.js / Container Deployment (Cloud Run, Render, Railway, Docker)
+
+To run ClubSync as a standalone container or on any standard Node.js server:
 
 ```bash
 # 1. Build client assets and server bundle
