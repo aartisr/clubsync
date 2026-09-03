@@ -25,7 +25,7 @@ export const DESIGN_DOC_SECTIONS: DesignDocSection[] = [
     icon: 'ShieldCheck',
     summary: 'A scalable blueprint for unifying high school and university student clubs under a centralized, school-owned GitHub Education Organization managed via Google Workspace API automation.',
     keyTakeaways: [
-      '100% School Account Ownership: All GitHub accounts, teams, and repositories are anchored to school-issued @school.edu Google Workspace identities.',
+      '100% School Account Ownership: All GitHub accounts, teams, and repositories are anchored to school-issued @pioneercss.org Google Workspace identities.',
       'Automated Lifecycle Management: Zero-manual-overhead student onboarding and offboarding powered by Google Admin Directory API sync.',
       'Cross-Club Collaboration: Multi-club partitioning allows Robotics, CS, Autonomous Vehicle, and Design teams to co-develop without security spillover.',
       'Smooth Handover Protocol: Turnkey leadership transition framework ensures project continuity when student admins graduate.'
@@ -43,8 +43,8 @@ Student clubs—especially specialized engineering and technical teams like **Ro
 This design document establishes **ClubSync**, a production-ready organizational architecture leveraging **GitHub Education / GitHub Enterprise Cloud** paired with **Google Workspace API Automation**.
 
 #### Key Architectural Pillars:
-1. **Single Sign-On (SAML 2.0 / OIDC):** Enforces authentication exclusively through school Google Workspace accounts (\`@school.edu\`).
-2. **Directory-Driven Group Sync:** Google Workspace Groups (\`robotics-leads@school.edu\`, \`robotics-software@school.edu\`, \`cross-club-robotics-cs@school.edu\`) automatically mirror to GitHub Teams via background API sync scripts.
+1. **Single Sign-On (SAML 2.0 / OIDC):** Enforces authentication exclusively through school Google Workspace accounts (\`@pioneercss.org\`).
+2. **Directory-Driven Group Sync:** Google Workspace Groups (\`robotics-leads@pioneercss.org\`, \`robotics-software@pioneercss.org\`, \`cross-club-robotics-cs@pioneercss.org\`) automatically mirror to GitHub Teams via background API sync scripts.
 3. **Partitioned Repositories with Cross-Club Shared Hubs:** Repositories are strictly categorized into *Club Internal*, *Cross-Club Public*, *Cross-Club Private*, and *Shared Asset Libraries*.
 4. **Graduation Handover System:** Built-in transition protocol with break-glass admin accounts, ownership verification checklists, and automated access transfer scripts.
 `
@@ -68,7 +68,7 @@ This design document establishes **ClubSync**, a production-ready organizational
 To allow the **Robotics Club** to operate independently while collaborating with the Computer Science, Autonomous Racing, and Design clubs, the GitHub Organization is structured hierarchically.
 
 \`\`\`
-School GitHub Education Organization (@school-clubs-org)
+School GitHub Education Organization (@pcss2-robotics)
 ├── 🏢 Robotics Club
 │   ├── 👥 Team: robotics-leads (Admin on robotics repos)
 │   ├── 👥 Team: robotics-software (Write on software repos, Read on hardware CAD)
@@ -111,7 +111,7 @@ Repositories must adhere to strict naming conventions and privacy visibility tie
     summary: 'Binding GitHub member identities directly to institutional Google Workspace accounts to guarantee school ownership and immediate access revocation upon student withdrawal or graduation.',
     keyTakeaways: [
       'SAML 2.0 / OIDC Single Sign-On: Google Workspace serves as the central Identity Provider (IdP).',
-      'NameID Mapping: Google primary email (student@school.edu) mapped as GitHub SAML NameID.',
+      'NameID Mapping: Google primary email (student@pioneercss.org) mapped as GitHub SAML NameID.',
       'Enforced 2FA/MFA: Google Workspace 2-Factor Authentication policies automatically apply to GitHub logins.',
       'Instant Deprovisioning: Suspending or deleting a Google account instantly revokes access across GitHub.'
     ],
@@ -132,15 +132,15 @@ By configuring **Google Workspace as the SAML 2.0 Identity Provider (IdP)** for 
        │  * Enforces Google 2FA / Security policies
        │
        └──(3) SAML Response (Signed Assertion)───────────────> [ GitHub Enterprise ]
-             - NameID: student.name@school.edu
-             - Email: student.name@school.edu
+             - NameID: student.name@pioneercss.org
+             - Email: student.name@pioneercss.org
              - Display Name: Student Name
              - SSO Session Established
 \`\`\`
 
 ### 3.2 School Account Ownership Enforcement
-1. **GitHub Education Campus Requirement:** All members must verify their school email address (\`@school.edu\`).
-2. **Restrict Non-School Emails:** The organization setting *"Restrict email domain notifications"* is restricted strictly to \`school.edu\`.
+1. **GitHub Education Campus Requirement:** All members must verify their school email address (\`@pioneercss.org\`).
+2. **Restrict Non-School Emails:** The organization setting *"Restrict email domain notifications"* is restricted strictly to \`pioneercss.org\`.
 3. **SCIM / Automated Provisioning:** Google Workspace Directory API sync automatically provisions and deprovisions member access based on organizational unit (OU) status.
 `
   },
@@ -163,28 +163,28 @@ By configuring **Google Workspace as the SAML 2.0 Identity Provider (IdP)** for 
 ### 4.1 Automated Onboarding Workflow
 When a new student joins the **Robotics Club** (or multiple clubs like Robotics + CS):
 
-1. **Club Registration:** Student fills out the official school club Google Form or is added to the Google Workspace Group (\`robotics-members@school.edu\` & \`robotics-software@school.edu\`) by the Robotics Club Admin.
+1. **Club Registration:** Student fills out the official school club Google Form or is added to the Google Workspace Group (\`robotics-members@pioneercss.org\` & \`robotics-software@pioneercss.org\`) by the Robotics Club Admin.
 2. **Directory Event Trigger:** Google Admin SDK Admin Directory API emits an Event / Google Apps Script trigger executes on time-driven interval.
 3. **Sync Engine Execution:**
-   * Reads current members of Google Group \`robotics-software@school.edu\`.
+   * Reads current members of Google Group \`robotics-software@pioneercss.org\`.
    * Checks corresponding GitHub Team \`robotics-software\`.
    * If member's GitHub handle / email is missing, calls GitHub REST API: \`PUT /orgs/{org}/teams/{team_slug}/memberships/{username}\`.
    * Dispatches email notification with onboarding guide and repository links.
-4. **Cross-Club Join:** If student joins CS Club as well, adding them to \`cs-developers@school.edu\` automatically grants access to CS repositories without changing their Robotics permissions.
+4. **Cross-Club Join:** If student joins CS Club as well, adding them to \`cs-developers@pioneercss.org\` automatically grants access to CS repositories without changing their Robotics permissions.
 
 ### 4.2 Group Naming Convention Standard
 To ensure seamless mapping between Google Workspace and GitHub Teams, the system enforces a strict email prefix convention:
 
 \`\`\`
-Format: [club-code]-[team-name]@school.edu
+Format: [club-code]-[team-name]@pioneercss.org
 
 Examples:
-- robotics-leads@school.edu         ──> GitHub Team: robotics-leads
-- robotics-software@school.edu      ──> GitHub Team: robotics-software
-- robotics-hardware@school.edu      ──> GitHub Team: robotics-hardware
-- cs-leads@school.edu              ──> GitHub Team: cs-leads
-- cs-developers@school.edu         ──> GitHub Team: cs-developers
-- cross-club-robotics-cs@school.edu ──> GitHub Team: cross-club-robotics-cs
+- robotics-leads@pioneercss.org         ──> GitHub Team: robotics-leads
+- robotics-software@pioneercss.org      ──> GitHub Team: robotics-software
+- robotics-hardware@pioneercss.org      ──> GitHub Team: robotics-hardware
+- cs-leads@pioneercss.org              ──> GitHub Team: cs-leads
+- cs-developers@pioneercss.org         ──> GitHub Team: cs-developers
+- cross-club-robotics-cs@pioneercss.org ──> GitHub Team: cross-club-robotics-cs
 \`\`\`
 `
   },
@@ -236,7 +236,7 @@ Every repository created in the organization automatically inherits mandatory br
     summary: 'A step-by-step handover procedure, break-glass admin architecture, and automated audit tools ensuring seamless administrative succession when senior student leaders graduate.',
     keyTakeaways: [
       'Multi-Admin Redundancy: Minimum of 2 active student admins + 1 faculty advisor account.',
-      'Faculty / School Break-Glass Account: Permanent IT-managed Google account (e.g., robotics-faculty-advisor@school.edu) holding Organization Owner rights.',
+      'Faculty / School Break-Glass Account: Permanent IT-managed Google account (e.g., robotics.advisor@pioneercss.org) holding Organization Owner rights.',
       'Graduation Succession Countdown: 60-day structured handover wizard starting in spring semester.',
       'Automated Key Rotation & Audit: One-click rotation of API tokens, SSH keys, and webhook secrets.'
     ],
@@ -247,7 +247,7 @@ Every repository created in the organization automatically inherits mandatory br
 To ensure the Robotics Club (and any other club) never loses administrative control when student leaders graduate:
 
 1. **Faculty Advisor / School IT Co-Owner:**
-   * A permanent school account (\`robotics-faculty-advisor@school.edu\` or \`clubs-it-admin@school.edu\`) is assigned **Organization Owner** status.
+   * A permanent school account (\`robotics.advisor@pioneercss.org\` or \`it@pioneercss.org\`) is assigned **Organization Owner** status.
    * This account is managed by the school's IT department or faculty sponsor and acts as the ultimate authority in break-glass scenarios.
 2. **Student Admin Pair Model:**
    * At any time, there must be at least **two** active student admins (typically the Senior President and Junior Vice-President).
@@ -261,13 +261,13 @@ To ensure the Robotics Club (and any other club) never loses administrative cont
   └── Nominates Junior Vice-President to incoming Lead Admin role.
 
 [ April 15th: Permissions Escalation ]
-  └── Incoming Lead added to 'robotics-leads@school.edu' Google Group.
+  └── Incoming Lead added to 'robotics-leads@pioneercss.org' Google Group.
   └── Google Workspace sync elevates incoming Lead to GitHub Team 'robotics-leads'.
   └── Senior Admin guides Junior Lead through repo settings, API credentials, and webhooks.
 
 [ May 15th: Key Rotation & Access Audit ]
   └── All webhook secrets, CI/CD tokens, and deployment keys rotated.
-  └── Inactive graduated members flagged for transition to 'robotics-alumni@school.edu'.
+  └── Inactive graduated members flagged for transition to 'robotics-alumni@pioneercss.org'.
 
 [ Graduation Day: Final Transfer ]
   └── Senior Admin's Google Group membership moved to Alumni status.

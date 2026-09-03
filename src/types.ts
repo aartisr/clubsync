@@ -145,7 +145,7 @@ export interface ScriptParameter {
 export interface SimulationUser {
   id: string;
   name: string;
-  email: string; // e.g. student@school.edu
+  email: string; // e.g. student@pioneercss.org
   primaryClub: string;
   secondaryClubs: string[];
   selectedGroups: string[];

@@ -20,9 +20,9 @@ export const AUTOMATION_SCRIPTS: AutomationScript[] = [
       'Store GITHUB_TOKEN and GITHUB_ORG in Apps Script Script Properties'
     ],
     parameters: [
-      { key: 'SCHOOL_DOMAIN', label: 'School Domain', defaultValue: 'school.edu', placeholder: 'e.g., myschool.edu', description: 'Primary Google Workspace domain name.' },
-      { key: 'GITHUB_ORG', label: 'GitHub Organization Name', defaultValue: 'school-robotics-org', placeholder: 'e.g., hyperion-robotics', description: 'Target GitHub Organization name.' },
-      { key: 'ADMIN_EMAIL', label: 'Club Admin Email', defaultValue: 'robotics-lead@school.edu', placeholder: 'admin@school.edu', description: 'Primary administrator email for alerts.' }
+      { key: 'SCHOOL_DOMAIN', label: 'School Domain', defaultValue: 'pioneercss.org', placeholder: 'pioneercss.org', description: 'Primary Google Workspace domain name.' },
+      { key: 'GITHUB_ORG', label: 'GitHub Organization Name', defaultValue: 'pcss2-robotics', placeholder: 'pcss2-robotics', description: 'Target GitHub Organization name.' },
+      { key: 'ADMIN_EMAIL', label: 'Club Admin Email', defaultValue: 'robotics@pioneercss.org', placeholder: 'it@pioneercss.org', description: 'Primary administrator email for alerts.' }
     ],
     codeTemplate: `/**
  * ClubSync - Google Workspace Group to GitHub Team Sync
@@ -163,8 +163,8 @@ function sendAdminAlert(adminEmail, subject, body) {
       'GitHub Organization Admin Access Token'
     ],
     parameters: [
-      { key: 'SCHOOL_DOMAIN', label: 'School Domain', defaultValue: 'school.edu', placeholder: 'school.edu', description: 'School domain' },
-      { key: 'GITHUB_ORG', label: 'GitHub Org', defaultValue: 'school-robotics-org', placeholder: 'school-robotics-org', description: 'Target GitHub Organization' }
+      { key: 'SCHOOL_DOMAIN', label: 'School Domain', defaultValue: 'pioneercss.org', placeholder: 'pioneercss.org', description: 'School domain' },
+      { key: 'GITHUB_ORG', label: 'GitHub Org', defaultValue: 'pcss2-robotics', placeholder: 'pcss2-robotics', description: 'Target GitHub Organization' }
     ],
     codeTemplate: `import express from 'express';
 import { google } from 'googleapis';
@@ -256,14 +256,14 @@ app.listen(3000, () => console.log('ClubSync Webhook Server listening on port 30
     category: 'github-actions',
     fileExtension: 'yml',
     language: 'yaml',
-    description: 'GitHub Actions workflow triggered on repository creation or push. Automatically enforces branch protection, verifies committer emails match @school.edu, and attaches Codeowners.',
+    description: 'GitHub Actions workflow triggered on repository creation or push. Automatically enforces branch protection, verifies committer emails match @pioneercss.org, and attaches Codeowners.',
     useCase: 'Enforce school compliance and branch protection rules automatically across all new club repositories.',
     prerequisites: [
       'Add workflow to template repositories under .github/workflows/policy.yml',
       'Set PAT token in secrets: ORG_ADMIN_TOKEN'
     ],
     parameters: [
-      { key: 'SCHOOL_DOMAIN', label: 'School Domain', defaultValue: 'school.edu', placeholder: 'school.edu', description: 'Required email domain.' }
+      { key: 'SCHOOL_DOMAIN', label: 'School Domain', defaultValue: 'pioneercss.org', placeholder: 'pioneercss.org', description: 'Required email domain.' }
     ],
     codeTemplate: `name: ClubSync Compliance & Branch Security Policy
 
@@ -305,7 +305,7 @@ jobs:
           if [ ! -f CODEOWNERS ] && [ ! -f .github/CODEOWNERS ]; then
             echo "WARNING: No CODEOWNERS file found! Creating default CODEOWNERS..."
             mkdir -p .github
-            echo "* @school-robotics-org/robotics-leads" > .github/CODEOWNERS
+            echo "* @pcss2-robotics/robotics-leads" > .github/CODEOWNERS
           fi
 
       - name: Run Secret Protection Scan
@@ -325,7 +325,7 @@ jobs:
     useCase: 'Initial setup or rapid organization bootstrapping for new school clubs.',
     prerequisites: ['Install GitHub CLI (`gh`)', 'Run `gh auth login` with Organization Admin account'],
     parameters: [
-      { key: 'GITHUB_ORG', label: 'GitHub Org', defaultValue: 'school-robotics-org', placeholder: 'school-robotics-org', description: 'Target Organization' }
+      { key: 'GITHUB_ORG', label: 'GitHub Org', defaultValue: 'pcss2-robotics', placeholder: 'pcss2-robotics', description: 'Target Organization' }
     ],
     codeTemplate: `#!/usr/bin/env bash
 # ==============================================================================
@@ -387,8 +387,8 @@ echo "✅ ClubSync Organization Setup Complete!"
     useCase: 'Guide school IT administrators through configuring Google Workspace as the Single Sign-On IdP.',
     prerequisites: ['Google Workspace Admin privilege', 'GitHub Enterprise / Campus Admin privilege'],
     parameters: [
-      { key: 'SCHOOL_DOMAIN', label: 'School Domain', defaultValue: 'school.edu', placeholder: 'school.edu', description: 'School domain' },
-      { key: 'GITHUB_ORG', label: 'GitHub Org', defaultValue: 'school-robotics-org', placeholder: 'school-robotics-org', description: 'Target GitHub Org' }
+      { key: 'SCHOOL_DOMAIN', label: 'School Domain', defaultValue: 'pioneercss.org', placeholder: 'pioneercss.org', description: 'School domain' },
+      { key: 'GITHUB_ORG', label: 'GitHub Org', defaultValue: 'pcss2-robotics', placeholder: 'pcss2-robotics', description: 'Target GitHub Org' }
     ],
     codeTemplate: `{
   "saml_configuration": {

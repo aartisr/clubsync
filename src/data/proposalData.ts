@@ -22,7 +22,7 @@ export const PROPOSAL_SECTIONS: ProposalSection[] = [
     content: `The proposed system guarantees that student data privacy and educational records remain fully protected in compliance with FERPA and institutional security standards.`,
     keyBenefits: [
       'No Storage of Private Student Data: Repositories contain only code and technical assets.',
-      'Enforced School Domain Access (@school.edu): External personal accounts cannot access private repositories.',
+      'Enforced School Domain Access (@pioneercss.org): External personal accounts cannot access private repositories.',
       'Automated Secret & Credential Scanning: Blocks accidental pushes of sensitive passwords or keys.',
       'Instant Access Revocation: Suspending a student Google account immediately blocks all GitHub access.'
     ],
@@ -44,8 +44,8 @@ export const PROPOSAL_SECTIONS: ProposalSection[] = [
     content: `To implement ClubSync, the club requests the following standard configuration actions from the IT Department:`,
     keyBenefits: [
       'Google Workspace SAML App Enablement: Allow Google Workspace to act as SAML IdP for GitHub.',
-      'Google Group Provisioning: Create standard club email aliases (e.g., robotics-leads@school.edu).',
-      'Faculty Sponsor Designation: Assign robotics-faculty-advisor@school.edu as permanent Organization Co-Owner.'
+      'Google Group Provisioning: Create standard club email aliases (e.g., robotics-leads@pioneercss.org).',
+      'Faculty Sponsor Designation: Assign robotics.advisor@pioneercss.org as permanent Organization Co-Owner.'
     ]
   }
 ];
