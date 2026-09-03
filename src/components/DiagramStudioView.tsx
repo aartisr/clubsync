@@ -25,6 +25,8 @@ import {
   ZoomIn,
   ZoomOut,
   Maximize2,
+  Move,
+  Hand,
   SlidersHorizontal,
   Table,
   Presentation,
@@ -46,10 +48,25 @@ export const DiagramStudioView: React.FC<DiagramStudioViewProps> = ({ config, on
   const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
   const [isWalkthroughPlaying, setIsWalkthroughPlaying] = useState<boolean>(false);
   const [zoomLevel, setZoomLevel] = useState<number>(1);
+  const [panOffset, setPanOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState<boolean>(false);
   const [showZoneBoundaries, setShowZoneBoundaries] = useState<boolean>(true);
   const [copiedNotification, setCopiedNotification] = useState<boolean>(false);
 
   const canvasRef = useRef<SVGSVGElement | null>(null);
+  const dragRef = useRef<{
+    startX: number;
+    startY: number;
+    initialPanX: number;
+    initialPanY: number;
+    hasMoved: boolean;
+  }>({
+    startX: 0,
+    startY: 0,
+    initialPanX: 0,
+    initialPanY: 0,
+    hasMoved: false
+  });
 
   const activeDiagram = DIAGRAM_SPECS.find(d => d.id === activeDiagramId) || DIAGRAM_SPECS[0];
   const currentStep = activeDiagram.walkthroughSteps[activeStepIndex];
@@ -74,13 +91,111 @@ export const DiagramStudioView: React.FC<DiagramStudioViewProps> = ({ config, on
     return () => clearInterval(interval);
   }, [isWalkthroughPlaying, activeDiagram]);
 
-  // Reset step index when changing diagrams
+  // Reset step index and viewport when changing diagrams
   const handleSelectDiagram = (id: string) => {
     setActiveDiagramId(id);
     setSelectedNode(null);
     setHoveredNodeId(null);
     setActiveStepIndex(0);
     setIsWalkthroughPlaying(false);
+    setZoomLevel(1);
+    setPanOffset({ x: 0, y: 0 });
+  };
+
+  // Mouse pan / drag handlers
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (e.button !== 0) return;
+    setIsDragging(true);
+    dragRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      initialPanX: panOffset.x,
+      initialPanY: panOffset.y,
+      hasMoved: false
+    };
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    const dx = e.clientX - dragRef.current.startX;
+    const dy = e.clientY - dragRef.current.startY;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+      dragRef.current.hasMoved = true;
+    }
+    setPanOffset({
+      x: Math.round(dragRef.current.initialPanX + dx),
+      y: Math.round(dragRef.current.initialPanY + dy)
+    });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+  };
+
+  // Touch pan / drag handlers for tablet & mobile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 1) {
+      setIsDragging(true);
+      dragRef.current = {
+        startX: e.touches[0].clientX,
+        startY: e.touches[0].clientY,
+        initialPanX: panOffset.x,
+        initialPanY: panOffset.y,
+        hasMoved: false
+      };
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging || e.touches.length !== 1) return;
+    const dx = e.touches[0].clientX - dragRef.current.startX;
+    const dy = e.touches[0].clientY - dragRef.current.startY;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+      dragRef.current.hasMoved = true;
+    }
+    setPanOffset({
+      x: Math.round(dragRef.current.initialPanX + dx),
+      y: Math.round(dragRef.current.initialPanY + dy)
+    });
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+  };
+
+  // Trackpad scroll to pan or Ctrl/Cmd + scroll to zoom
+  const handleWheel = (e: React.WheelEvent) => {
+    if (e.ctrlKey || e.metaKey) {
+      e.preventDefault();
+      const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
+      setZoomLevel(prev => Math.min(2.5, Math.max(0.4, Number((prev * zoomFactor).toFixed(2)))));
+    } else {
+      setPanOffset(prev => ({
+        x: Math.round(prev.x - e.deltaX * 0.85),
+        y: Math.round(prev.y - e.deltaY * 0.85)
+      }));
+    }
+  };
+
+  const handleResetView = () => {
+    setZoomLevel(1);
+    setPanOffset({ x: 0, y: 0 });
+  };
+
+  const handlePanBy = (dx: number, dy: number) => {
+    setPanOffset(prev => ({ x: prev.x + dx, y: prev.y + dy }));
+  };
+
+  const handleNodeClick = (node: DiagramNode) => {
+    if (dragRef.current.hasMoved) {
+      // User was dragging the canvas, avoid accidental inspection
+      return;
+    }
+    setSelectedNode(node);
   };
 
   // Node connectedness check
@@ -529,13 +644,33 @@ ${activeDiagram.executiveBrief.decisionImpact}
       {viewMode === 'canvas' && (
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           
-          {/* SVG Interactive Canvas */}
-          <div className="lg:col-span-3 bg-white border-2 border-slate-900 p-4 shadow-sm relative overflow-hidden flex flex-col items-center justify-center min-h-[580px]">
+          {/* SVG Interactive Canvas with Drag-to-Pan */}
+          <div 
+            className={`lg:col-span-3 bg-white border-2 border-slate-900 shadow-sm relative overflow-hidden flex flex-col justify-between min-h-[600px] select-none ${
+              isDragging ? 'cursor-grabbing' : 'cursor-grab'
+            }`}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseLeave}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onWheel={handleWheel}
+          >
             
+            {/* Floating Drag Helper Chip */}
+            <div className="absolute top-3 left-3 z-20 bg-slate-900/90 backdrop-blur-xs text-white text-[10px] font-mono px-2.5 py-1 flex items-center gap-1.5 border border-slate-800 shadow-sm pointer-events-none">
+              <Move className="w-3 h-3 text-amber-400 shrink-0" />
+              <span>Drag to Pan</span>
+              <span className="text-slate-400">•</span>
+              <span>Scroll to Zoom</span>
+            </div>
+
             {/* Canvas Toolbar */}
-            <div className="absolute top-3 right-3 z-10 flex items-center gap-1.5 bg-white/95 backdrop-blur-xs p-1 border border-slate-300 shadow-xs">
+            <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5 bg-white/95 backdrop-blur-xs p-1.5 border-2 border-slate-900 shadow-sm">
               <button
-                onClick={() => setShowZoneBoundaries(!showZoneBoundaries)}
+                onClick={(e) => { e.stopPropagation(); setShowZoneBoundaries(!showZoneBoundaries); }}
                 className={`px-2 py-1 text-[11px] font-bold uppercase transition-colors ${
                   showZoneBoundaries ? 'bg-blue-100 text-blue-900 font-black' : 'text-slate-600 hover:bg-slate-100'
                 }`}
@@ -543,43 +678,68 @@ ${activeDiagram.executiveBrief.decisionImpact}
               >
                 Zones: {showZoneBoundaries ? 'ON' : 'OFF'}
               </button>
-              <div className="h-4 w-px bg-slate-300 mx-1" />
+
+              <div className="h-4 w-px bg-slate-300 mx-0.5" />
+
+              {/* Pan position indicator */}
+              {(panOffset.x !== 0 || panOffset.y !== 0) && (
+                <div className="hidden sm:flex items-center gap-1 bg-amber-50 border border-amber-300 px-1.5 py-0.5 text-[10px] font-mono text-amber-900">
+                  <Move className="w-2.5 h-2.5 text-amber-700" />
+                  <span>Panned</span>
+                </div>
+              )}
+
+              {/* Zoom Out */}
               <button
-                onClick={() => setZoomLevel(prev => Math.min(1.4, prev + 0.1))}
+                onClick={(e) => { e.stopPropagation(); setZoomLevel(prev => Math.max(0.4, Number((prev - 0.15).toFixed(2)))); }}
                 className="p-1 text-slate-700 hover:bg-slate-100"
-                title="Zoom In"
-              >
-                <ZoomIn className="w-3.5 h-3.5" />
-              </button>
-              <span className="text-[10px] font-mono font-bold text-slate-600 px-1">
-                {Math.round(zoomLevel * 100)}%
-              </span>
-              <button
-                onClick={() => setZoomLevel(prev => Math.max(0.7, prev - 0.1))}
-                className="p-1 text-slate-700 hover:bg-slate-100"
-                title="Zoom Out"
+                title="Zoom Out (Min 40%)"
               >
                 <ZoomOut className="w-3.5 h-3.5" />
               </button>
+
+              <span className="text-[11px] font-mono font-bold text-slate-800 px-1 min-w-[38px] text-center">
+                {Math.round(zoomLevel * 100)}%
+              </span>
+
+              {/* Zoom In */}
               <button
-                onClick={() => setZoomLevel(1)}
-                className="px-2 py-1 text-[10px] uppercase font-bold text-slate-600 hover:text-slate-900 border-l border-slate-200"
+                onClick={(e) => { e.stopPropagation(); setZoomLevel(prev => Math.min(2.5, Number((prev + 0.15).toFixed(2)))); }}
+                className="p-1 text-slate-700 hover:bg-slate-100"
+                title="Zoom In (Max 250%)"
               >
-                Reset
+                <ZoomIn className="w-3.5 h-3.5" />
+              </button>
+
+              <div className="h-4 w-px bg-slate-300 mx-0.5" />
+
+              {/* Reset View */}
+              <button
+                onClick={(e) => { e.stopPropagation(); handleResetView(); }}
+                className="flex items-center gap-1 px-2 py-1 text-[10px] uppercase font-bold text-slate-700 hover:text-slate-900 hover:bg-slate-100 border-l border-slate-200"
+                title="Recenter and Reset Zoom to 100%"
+              >
+                <RotateCcw className="w-3 h-3" />
+                <span>Reset View</span>
               </button>
             </div>
 
-            {/* SVG Canvas Container */}
-            <div 
-              style={{ transform: `scale(${zoomLevel})`, transformOrigin: 'top center' }}
-              className="w-full transition-transform duration-200 overflow-visible py-4"
-            >
-              <svg
-                id="diagram-canvas-svg"
-                ref={canvasRef}
-                viewBox={`0 0 ${canvasWidth} ${canvasHeight}`}
-                className="w-full h-auto overflow-visible select-none"
+            {/* SVG Canvas Container with Translate & Scale */}
+            <div className="w-full flex-1 flex items-center justify-center overflow-hidden relative min-h-[500px]">
+              <div 
+                style={{ 
+                  transform: `translate(${panOffset.x}px, ${panOffset.y}px) scale(${zoomLevel})`, 
+                  transformOrigin: 'center center',
+                  transition: isDragging ? 'none' : 'transform 0.12s ease-out'
+                }}
+                className="w-full h-full flex items-center justify-center p-4 select-none pointer-events-auto"
               >
+                <svg
+                  id="diagram-canvas-svg"
+                  ref={canvasRef}
+                  viewBox={`0 0 ${canvasWidth} ${canvasHeight}`}
+                  className="w-full h-auto overflow-visible select-none max-h-[520px]"
+                >
                 <defs>
                   {/* Subtle Blueprint Dot Grid */}
                   <pattern id="dot-grid" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
@@ -766,7 +926,7 @@ ${activeDiagram.executiveBrief.decisionImpact}
                     <g
                       key={node.id}
                       transform={`translate(${node.x}, ${node.y})`}
-                      onClick={() => setSelectedNode(node)}
+                      onClick={() => handleNodeClick(node)}
                       onMouseEnter={() => setHoveredNodeId(node.id)}
                       onMouseLeave={() => setHoveredNodeId(null)}
                       className={`cursor-pointer group transition-opacity duration-300 ${
@@ -848,11 +1008,27 @@ ${activeDiagram.executiveBrief.decisionImpact}
                 })}
               </svg>
             </div>
+          </div>
 
             {/* Quick Canvas Helper Footer */}
-            <div className="w-full flex items-center justify-between pt-2 border-t border-slate-200 text-[11px] text-slate-500 font-mono">
-              <span>Click any component to view technical specifications & SAML properties</span>
-              <span>Hover over cards to isolate connected pathways</span>
+            <div className="w-full flex flex-col sm:flex-row items-center justify-between p-3 border-t-2 border-slate-900 text-[11px] text-slate-600 font-mono bg-slate-50 gap-2 z-10">
+              <div className="flex items-center gap-2">
+                <Hand className="w-3.5 h-3.5 text-blue-700 shrink-0" />
+                <span>Click & drag background to pan • Click cards to inspect properties</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-slate-500">
+                  Offset: ({panOffset.x >= 0 ? `+${panOffset.x}` : panOffset.x}px, {panOffset.y >= 0 ? `+${panOffset.y}` : panOffset.y}px)
+                </span>
+                {(panOffset.x !== 0 || panOffset.y !== 0 || zoomLevel !== 1) && (
+                  <button 
+                    onClick={handleResetView}
+                    className="text-blue-700 hover:text-blue-900 underline font-bold uppercase text-[10px]"
+                  >
+                    Center View
+                  </button>
+                )}
+              </div>
             </div>
           </div>
 
