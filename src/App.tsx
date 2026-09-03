@@ -107,8 +107,17 @@ export default function App() {
               <span className="w-2 h-2 rounded-full bg-blue-600"></span>
               Backup Enabled ({config.githubOrg})
             </span>
-            <span className="text-slate-400">
-              Version 2.4 | Admin: Robotics Lead
+            <span className="text-slate-500">
+              Version 2.4 | Admin:{' '}
+              <a
+                id="admin-profile-link"
+                href="https://ai-aarti.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-slate-800 hover:text-blue-600 font-bold underline underline-offset-2 transition-colors inline-flex items-center gap-0.5"
+              >
+                Aarti S Ravikumar
+              </a>
             </span>
           </div>
         </div>
