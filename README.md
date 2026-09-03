@@ -69,7 +69,7 @@ Before running ClubSync locally or deploying it, ensure you have:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/aartisr/clubsync.git
+git clone <your-repository-url>
 cd clubsync
 ```
 
@@ -142,7 +142,7 @@ ClubSync is fully optimized and pre-configured for **Vercel** with zero manual c
 
 1. **Import Project to Vercel**:
    - Go to [vercel.com/new](https://vercel.com/new).
-   - Select your GitHub repository (`aartisr/clubsync`).
+   - Select the repository you want to deploy.
 2. **Framework & Settings**:
    - Vercel automatically detects the Vite framework and reads the included `vercel.json`.
    - **Framework Preset**: `Vite`
@@ -156,19 +156,19 @@ ClubSync is fully optimized and pre-configured for **Vercel** with zero manual c
 
 ---
 
-### Option B: Standalone Node.js / Container Deployment (Cloud Run, Render, Railway, Docker)
+### Option B: Standalone Node.js deployment
 
 To run ClubSync as a standalone container or on any standard Node.js server:
 
 ```bash
 # 1. Build client assets and server bundle
-npm run build
+npm run build:standalone
 
 # 2. Start the standalone production server
 npm run start
 ```
 
-The server binds to `0.0.0.0:3000`, making it suitable for deployment to **Google Cloud Run**, **Render**, **Railway**, **AWS ECS/App Runner**, or any standard Docker / Node.js container host.
+The server binds to `0.0.0.0:3000`, suitable for a standard Node.js host.
 
 ---
 
