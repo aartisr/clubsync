@@ -204,10 +204,10 @@ export const ScriptHubView: React.FC<ScriptHubViewProps> = ({ config, onOpenAI }
           </div>
 
           {/* AI Script Customizer Box */}
-          <div className="bg-white border border-slate-200 p-5 shadow-sm space-y-3">
+          <div className="bg-white border-2 border-slate-900 p-5 shadow-sm space-y-3">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-blue-600" />
-              <h4 className="text-xs font-bold uppercase tracking-wider text-blue-800 border-l-4 border-blue-800 pl-2">
+              <Sparkles className="w-4 h-4 text-blue-700" />
+              <h4 className="text-xs font-black uppercase tracking-wider text-slate-900">
                 Tailor Script with Architecture Advisor
               </h4>
             </div>
@@ -235,23 +235,30 @@ export const ScriptHubView: React.FC<ScriptHubViewProps> = ({ config, onOpenAI }
 
         {/* Prerequisites & Instructions Sidebar */}
         <div className="lg:col-span-1 space-y-4">
-          <div className="bg-white border border-slate-200 p-5 shadow-sm space-y-4">
-            <div className="flex items-center gap-2 pb-3 border-b border-slate-200">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-blue-800 border-l-4 border-blue-800 pl-2">
+          <div className="bg-white border-2 border-slate-900 p-5 shadow-sm space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b-2 border-slate-900">
+              <h3 className="text-xs font-black uppercase tracking-wider text-slate-900">
                 Deployment Setup
               </h3>
+              <span className="text-[10px] font-mono font-bold bg-blue-100 text-blue-900 px-2 py-0.5 uppercase">
+                IT Automated
+              </span>
             </div>
 
             <div className="space-y-3">
               <div>
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Primary Use Case:</span>
-                <p className="text-xs text-slate-700 mt-1 leading-relaxed bg-slate-50 p-2.5 border border-slate-200">
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider font-mono">
+                  Why School IT Cares:
+                </span>
+                <p className="text-xs text-slate-800 mt-1 leading-relaxed bg-blue-50/70 p-2.5 border border-blue-200">
                   {activeScript.useCase}
                 </p>
               </div>
 
               <div className="pt-3 border-t border-slate-200 space-y-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Prerequisites:</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono">
+                  Prerequisites:
+                </span>
                 <ul className="space-y-2">
                   {activeScript.prerequisites.map((req, idx) => (
                     <li key={idx} className="flex items-start gap-2 text-xs text-slate-700 bg-slate-50 p-2 border border-slate-200">

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { PROPOSAL_SECTIONS } from '../data/proposalData';
 import { SchoolConfig } from '../types';
+import { ExecutiveMarkdown } from './ExecutiveMarkdown';
+import { AartiExecutiveMemo } from './AartiExecutiveMemo';
 import { 
   FileText, 
   Printer, 
@@ -17,7 +19,9 @@ import {
   Clock,
   GraduationCap,
   Users,
-  ChevronRight
+  ChevronRight,
+  Heart,
+  Briefcase
 } from 'lucide-react';
 
 interface ProposalGeneratorViewProps {
@@ -26,6 +30,7 @@ interface ProposalGeneratorViewProps {
 }
 
 export const ProposalGeneratorView: React.FC<ProposalGeneratorViewProps> = ({ config, onOpenAI }) => {
+  const [proposalTab, setProposalTab] = useState<'proposal' | 'aarti-memo'>('proposal');
   const [proposalTitle, setProposalTitle] = useState<string>(
     `Proposal for Centralized GitHub Education Infrastructure for ${config.schoolName} STEM Clubs`
   );
@@ -82,18 +87,48 @@ export const ProposalGeneratorView: React.FC<ProposalGeneratorViewProps> = ({ co
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row items-end sm:items-center gap-3">
+          {/* Document View Switcher */}
+          <div className="flex items-center bg-white border border-slate-300 p-1 shadow-xs">
+            <button
+              onClick={() => setProposalTab('proposal')}
+              className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1.5 ${
+                proposalTab === 'proposal'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Briefcase className="w-3.5 h-3.5" />
+              <span>Formal Proposal</span>
+            </button>
+            <button
+              onClick={() => setProposalTab('aarti-memo')}
+              className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1.5 ${
+                proposalTab === 'aarti-memo'
+                  ? 'bg-rose-700 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Heart className="w-3.5 h-3.5 text-rose-300" />
+              <span>Aarti's Letter to Board</span>
+            </button>
+          </div>
+
           <button
             onClick={() => window.print()}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-white bg-blue-600 hover:bg-blue-500 border border-blue-400 transition-colors shadow-xs"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-800 bg-white hover:bg-slate-50 border border-slate-300 transition-colors shadow-xs"
           >
             <Printer className="w-3.5 h-3.5" />
-            <span>Print / Save PDF</span>
+            <span>Print PDF</span>
           </button>
         </div>
       </header>
 
-      {/* Stakeholder Perspective Filter (Zero Cognitive Overload) */}
+      {proposalTab === 'aarti-memo' ? (
+        <AartiExecutiveMemo config={config} />
+      ) : (
+        <>
+          {/* Stakeholder Perspective Filter (Zero Cognitive Overload) */}
       <div className="bg-white border-2 border-slate-900 p-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
         <div className="flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-blue-700" />
@@ -252,9 +287,14 @@ export const ProposalGeneratorView: React.FC<ProposalGeneratorViewProps> = ({ co
                 <span>{sec.title}</span>
               </h3>
 
-              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
-                {sec.content.replace('@school.edu', `@${config.domain}`)}
-              </p>
+              <div className="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                <ExecutiveMarkdown 
+                  content={sec.content
+                    .replace(/@school\.edu/g, `@${config.domain}`)
+                    .replace(/school\.edu/g, config.domain)
+                  } 
+                />
+              </div>
 
               <div className="space-y-2 pt-1">
                 {sec.keyBenefits.map((benefit, bIdx) => (
@@ -377,6 +417,8 @@ export const ProposalGeneratorView: React.FC<ProposalGeneratorViewProps> = ({ co
           </div>
         </div>
       </div>
+        </>
+      )}
     </div>
   );
 };

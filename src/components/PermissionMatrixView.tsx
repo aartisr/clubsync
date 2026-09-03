@@ -276,6 +276,98 @@ export const PermissionMatrixView: React.FC<PermissionMatrixViewProps> = ({ conf
           </table>
         </div>
       </div>
+
+      {/* Plain-English Permission Guide for Leadership & Faculty Advisors */}
+      <div className="bg-white border-2 border-slate-900 p-6 space-y-4 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b-2 border-slate-900 gap-2">
+          <div>
+            <h3 className="text-sm font-black uppercase tracking-tight text-slate-900 flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-blue-700" />
+              Executive Permission Hierarchy: What Each Level Means for {config.schoolName}
+            </h3>
+            <p className="text-xs text-slate-500 font-medium">
+              Zero confusion guide for school principals, board members, and faculty sponsors.
+            </p>
+          </div>
+          <span className="text-[10px] font-mono font-bold bg-slate-100 text-slate-700 px-2 py-0.5 border border-slate-300 uppercase">
+            FERPA Principle of Least Privilege
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+          <div className="p-3 bg-rose-50 border border-rose-200 space-y-1">
+            <div className="flex items-center justify-between">
+              <span className="px-2 py-0.5 bg-rose-200 text-rose-900 font-mono font-bold text-[10px] uppercase">
+                admin
+              </span>
+              <span className="text-[10px] font-bold text-rose-700 uppercase">Faculty Sponsor & Captain Only</span>
+            </div>
+            <p className="text-rose-950 text-[11px] leading-snug pt-1">
+              Can alter repository privacy, configure branch protections, and adjust settings. Strictly limited to prevent accidental deletion or security changes.
+            </p>
+          </div>
+
+          <div className="p-3 bg-amber-50 border border-amber-200 space-y-1">
+            <div className="flex items-center justify-between">
+              <span className="px-2 py-0.5 bg-amber-200 text-amber-900 font-mono font-bold text-[10px] uppercase">
+                maintain
+              </span>
+              <span className="text-[10px] font-bold text-amber-700 uppercase">Senior Leads</span>
+            </div>
+            <p className="text-amber-950 text-[11px] leading-snug pt-1">
+              Can manage code reviews, merge approved pull requests, and configure continuous integration. Cannot delete repositories or invite outside collaborators.
+            </p>
+          </div>
+
+          <div className="p-3 bg-emerald-50 border border-emerald-200 space-y-1">
+            <div className="flex items-center justify-between">
+              <span className="px-2 py-0.5 bg-emerald-200 text-emerald-900 font-mono font-bold text-[10px] uppercase">
+                write
+              </span>
+              <span className="text-[10px] font-bold text-emerald-700 uppercase">Active Club Members</span>
+            </div>
+            <p className="text-emerald-950 text-[11px] leading-snug pt-1">
+              Can push code to feature branches, open pull requests, and collaborate daily on robot motors, vision models, or club websites.
+            </p>
+          </div>
+
+          <div className="p-3 bg-blue-50 border border-blue-200 space-y-1">
+            <div className="flex items-center justify-between">
+              <span className="px-2 py-0.5 bg-blue-200 text-blue-900 font-mono font-bold text-[10px] uppercase">
+                triage
+              </span>
+              <span className="text-[10px] font-bold text-blue-700 uppercase">Junior Members & Trainees</span>
+            </div>
+            <p className="text-blue-950 text-[11px] leading-snug pt-1">
+              Can review issues, label bug reports, and organize project milestones without any capability to modify live code directly.
+            </p>
+          </div>
+
+          <div className="p-3 bg-slate-50 border border-slate-200 space-y-1">
+            <div className="flex items-center justify-between">
+              <span className="px-2 py-0.5 bg-slate-200 text-slate-800 font-mono font-bold text-[10px] uppercase">
+                read
+              </span>
+              <span className="text-[10px] font-bold text-slate-600 uppercase">General Roster</span>
+            </div>
+            <p className="text-slate-700 text-[11px] leading-snug pt-1">
+              Can view code, clone repositories to school Chromebooks, and learn without any write permissions. Ideal for freshmen onboarding.
+            </p>
+          </div>
+
+          <div className="p-3 bg-slate-100 border border-slate-300 space-y-1">
+            <div className="flex items-center justify-between">
+              <span className="px-2 py-0.5 bg-slate-300 text-slate-700 font-mono font-bold text-[10px] uppercase">
+                none
+              </span>
+              <span className="text-[10px] font-bold text-slate-500 uppercase">Partition Isolation</span>
+            </div>
+            <p className="text-slate-600 text-[11px] leading-snug pt-1">
+              Zero visibility or access. Complete boundary isolation between independent clubs (e.g. CS Club cannot access private Robotics competition code).
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

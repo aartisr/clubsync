@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AIChatMessage, SchoolConfig } from '../types';
+import { ExecutiveMarkdown } from './ExecutiveMarkdown';
 import { 
   Sparkles, 
   X, 
@@ -133,8 +134,13 @@ export const AIAssistantDrawer: React.FC<AIAssistantDrawerProps> = ({ isOpen, on
                   ? 'bg-blue-600 text-white border border-blue-500'
                   : 'bg-slate-950 text-slate-200 border border-slate-800'
               }`}>
-                <p className="whitespace-pre-line">{msg.content}</p>
-                <span className="text-[9px] text-slate-500 font-mono block mt-1 text-right">
+                <ExecutiveMarkdown 
+                  content={msg.content} 
+                  theme={msg.role === 'user' ? 'light' : 'dark'} 
+                />
+                <span className={`text-[9px] font-mono block mt-1.5 text-right ${
+                  msg.role === 'user' ? 'text-blue-200' : 'text-slate-500'
+                }`}>
                   {msg.timestamp}
                 </span>
               </div>

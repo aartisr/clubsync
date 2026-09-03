@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { DESIGN_DOC_SECTIONS } from '../data/designDocData';
 import { SchoolConfig, NavigationTab } from '../types';
+import { ExecutiveMarkdown } from './ExecutiveMarkdown';
+import { ExecutiveProblemMatrix } from './ExecutiveProblemMatrix';
 import { 
   Search, 
   Printer, 
@@ -24,7 +26,8 @@ import {
   UserCheck,
   CheckCircle2,
   ChevronRight,
-  Send
+  Send,
+  Briefcase
 } from 'lucide-react';
 
 interface DesignDocViewProps {
@@ -189,18 +192,18 @@ export const DesignDocView: React.FC<DesignDocViewProps> = ({
           <div className="flex items-center bg-white border border-slate-300 p-1 shadow-xs">
             <button
               onClick={() => setIsPlainEnglishMode(true)}
-              className={`px-3 py-1 text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1.5 ${
+              className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1.5 ${
                 isPlainEnglishMode
                   ? 'bg-blue-600 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Plain English (ELI5)</span>
+              <Briefcase className="w-3.5 h-3.5" />
+              <span>Executive Briefing</span>
             </button>
             <button
               onClick={() => setIsPlainEnglishMode(false)}
-              className={`px-3 py-1 text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1.5 ${
+              className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1.5 ${
                 !isPlainEnglishMode
                   ? 'bg-slate-900 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
@@ -616,37 +619,20 @@ export const DesignDocView: React.FC<DesignDocViewProps> = ({
                 </div>
               </div>
 
-              {/* Markdown Rendered Content */}
-              <div className="prose prose-slate max-w-none text-xs sm:text-sm text-slate-700 space-y-4 leading-relaxed whitespace-pre-line">
-                {sec.contentMarkdown.split('\n\n').map((paragraph, pIdx) => {
-                  if (paragraph.startsWith('### ')) {
-                    return (
-                      <h4 key={pIdx} className="text-base font-black uppercase tracking-tight text-slate-900 pt-4 border-t border-slate-200">
-                        {paragraph.replace('### ', '')}
-                      </h4>
-                    );
-                  }
-                  if (paragraph.startsWith('#### ')) {
-                    return (
-                      <h5 key={pIdx} className="text-xs font-bold uppercase tracking-wider text-blue-800 pt-2 border-l-2 border-blue-800 pl-2">
-                        {paragraph.replace('#### ', '')}
-                      </h5>
-                    );
-                  }
-                  if (paragraph.startsWith('```')) {
-                    const code = paragraph.replace(/```[a-z]*/g, '').trim();
-                    return (
-                      <pre key={pIdx} className="p-4 bg-slate-900 text-slate-100 font-mono text-xs overflow-x-auto border border-slate-800 my-4 shadow-sm">
-                        <code>{code}</code>
-                      </pre>
-                    );
-                  }
-                  return (
-                    <p key={pIdx} className="text-slate-700 leading-relaxed">
-                      {paragraph}
-                    </p>
-                  );
-                })}
+              {/* Executive Problem & Risk Matrix for Section 1.0 (Zero Cognitive Overload for Leadership) */}
+              {sec.id === 'executive-summary' && (
+                <ExecutiveProblemMatrix config={config} />
+              )}
+
+              {/* High-Fidelity Executive Markdown Rendering (Zero Raw Markdown Symbols) */}
+              <div className="my-6">
+                <ExecutiveMarkdown 
+                  content={sec.contentMarkdown
+                    .replace(/@school\.edu/g, `@${config.domain}`)
+                    .replace(/@school-clubs-org/g, `@${config.githubOrg}`)
+                    .replace(/school\.edu/g, config.domain)
+                  } 
+                />
               </div>
 
               {/* Quick Reference Action Buttons */}
