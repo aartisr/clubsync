@@ -155,6 +155,12 @@ export const DesignDocView: React.FC<DesignDocViewProps> = ({
     sec.contentMarkdown.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Show one decision at a time by default. Searching deliberately expands the
+  // reading surface to the matching sections so people can compare results.
+  const visibleSections = searchQuery.trim()
+    ? filteredSections
+    : filteredSections.filter((sec) => sec.id === activeSectionId);
+
   const handleCopyLink = (secId: string) => {
     navigator.clipboard.writeText(`${window.location.origin}#${secId}`);
     setCopiedSection(secId);
@@ -166,7 +172,7 @@ export const DesignDocView: React.FC<DesignDocViewProps> = ({
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8 space-y-6 sm:space-y-8">
       
       {/* Geometric Balance Top Header */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-end border-b-2 border-slate-900 pb-4 mb-4 gap-4">
@@ -179,7 +185,7 @@ export const DesignDocView: React.FC<DesignDocViewProps> = ({
               {config.schoolName} • @{config.domain}
             </span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-black tracking-tighter uppercase text-slate-900">
+          <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-slate-900">
             Campus GitHub Architecture
           </h1>
           <p className="text-slate-600 font-medium text-xs sm:text-sm mt-1">
@@ -187,47 +193,49 @@ export const DesignDocView: React.FC<DesignDocViewProps> = ({
           </p>
         </div>
 
-        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 w-full md:w-auto">
           {/* Mode Switcher: Zero Cognitive Overload Toggle */}
-          <div className="flex items-center bg-white border border-slate-300 p-1 shadow-xs">
+          <div className="grid grid-cols-2 bg-white border border-slate-300 p-1 shadow-xs">
             <button
               onClick={() => setIsPlainEnglishMode(true)}
-              className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1.5 ${
+              aria-pressed={isPlainEnglishMode}
+              className={`min-h-10 justify-center px-3 py-1.5 text-xs font-bold transition-colors flex items-center gap-1.5 ${
                 isPlainEnglishMode
                   ? 'bg-blue-600 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <Briefcase className="w-3.5 h-3.5" />
-              <span>Executive Briefing</span>
+              <span>Plain English</span>
             </button>
             <button
               onClick={() => setIsPlainEnglishMode(false)}
-              className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1.5 ${
+              aria-pressed={!isPlainEnglishMode}
+              className={`min-h-10 justify-center px-3 py-1.5 text-xs font-bold transition-colors flex items-center gap-1.5 ${
                 !isPlainEnglishMode
                   ? 'bg-slate-900 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <Cpu className="w-3.5 h-3.5" />
-              <span>Technical Spec</span>
+              <span>Technical</span>
             </button>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="grid grid-cols-2 gap-2">
             <button
               onClick={handlePrint}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 transition-colors shadow-xs"
+              className="flex min-h-10 items-center justify-center gap-1.5 px-3 text-xs font-bold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 transition-colors shadow-xs"
             >
               <Printer className="w-3.5 h-3.5" />
-              <span>Export PDF</span>
+              <span>Print</span>
             </button>
             <button
               onClick={onOpenAI}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-white bg-slate-900 hover:bg-slate-800 transition-colors shadow-xs"
+              className="flex min-h-10 items-center justify-center gap-1.5 px-3 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 transition-colors shadow-xs"
             >
               <Sparkles className="w-3.5 h-3.5 text-blue-400" />
-              <span>Ask Advisor</span>
+              <span>Ask AI</span>
             </button>
           </div>
         </div>
@@ -484,7 +492,8 @@ export const DesignDocView: React.FC<DesignDocViewProps> = ({
                       setActiveSectionId(sec.id);
                       document.getElementById(sec.id)?.scrollIntoView({ behavior: 'smooth' });
                     }}
-                    className={`w-full text-left px-3 py-2 text-xs transition-all flex items-start gap-2 border-l-2 ${
+                    aria-current={isActive ? 'location' : undefined}
+                    className={`w-full min-h-10 text-left px-3 py-2 text-xs transition-all flex items-start gap-2 border-l-2 ${
                       isActive
                         ? 'bg-blue-50 text-blue-900 font-bold border-blue-800'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 border-transparent'
@@ -525,7 +534,7 @@ export const DesignDocView: React.FC<DesignDocViewProps> = ({
 
         {/* Content Body */}
         <div className="lg:col-span-3 space-y-8">
-          {filteredSections.map((sec) => (
+          {visibleSections.map((sec) => (
             <article
               key={sec.id}
               id={sec.id}

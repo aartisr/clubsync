@@ -1,16 +1,25 @@
-import React, { useState } from 'react';
+import React, { lazy, Suspense, useState } from 'react';
 import { NavigationTab, SchoolConfig } from './types';
 import { Navbar } from './components/Navbar';
-import { DesignDocView } from './components/DesignDocView';
-import { DiagramStudioView } from './components/DiagramStudioView';
-import { ScriptHubView } from './components/ScriptHubView';
-import { OnboardingSimulator } from './components/OnboardingSimulator';
-import { PermissionMatrixView } from './components/PermissionMatrixView';
-import { HandoverWizardView } from './components/HandoverWizardView';
-import { ProposalGeneratorView } from './components/ProposalGeneratorView';
 import { ConfigModal } from './components/ConfigModal';
 import { AIAssistantDrawer } from './components/AIAssistantDrawer';
-import { Bot, ShieldCheck, Github, GraduationCap } from 'lucide-react';
+
+const DesignDocView = lazy(() => import('./components/DesignDocView').then(({ DesignDocView }) => ({ default: DesignDocView })));
+const DiagramStudioView = lazy(() => import('./components/DiagramStudioView').then(({ DiagramStudioView }) => ({ default: DiagramStudioView })));
+const ScriptHubView = lazy(() => import('./components/ScriptHubView').then(({ ScriptHubView }) => ({ default: ScriptHubView })));
+const OnboardingSimulator = lazy(() => import('./components/OnboardingSimulator').then(({ OnboardingSimulator }) => ({ default: OnboardingSimulator })));
+const PermissionMatrixView = lazy(() => import('./components/PermissionMatrixView').then(({ PermissionMatrixView }) => ({ default: PermissionMatrixView })));
+const HandoverWizardView = lazy(() => import('./components/HandoverWizardView').then(({ HandoverWizardView }) => ({ default: HandoverWizardView })));
+const ProposalGeneratorView = lazy(() => import('./components/ProposalGeneratorView').then(({ ProposalGeneratorView }) => ({ default: ProposalGeneratorView })));
+
+const WorkspaceLoading = () => (
+  <div className="mx-auto flex min-h-56 max-w-7xl items-center px-4 sm:px-6 lg:px-8" role="status" aria-live="polite">
+    <div className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-600 shadow-sm">
+      <span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-300 border-t-blue-600" aria-hidden="true" />
+      Loading workspace…
+    </div>
+  </div>
+);
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<NavigationTab>('design-doc');
@@ -27,7 +36,7 @@ export default function App() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-900 font-sans antialiased selection:bg-blue-600 selection:text-white flex flex-col">
+    <div className="min-h-screen overflow-x-hidden bg-slate-100 text-slate-900 font-sans antialiased selection:bg-blue-600 selection:text-white flex flex-col">
       
       {/* Navigation Header */}
       <Navbar
@@ -39,7 +48,8 @@ export default function App() {
       />
 
       {/* Main View Area */}
-      <main className="flex-1 pb-12">
+      <main className="flex-1 pb-8 sm:pb-12">
+        <Suspense fallback={<WorkspaceLoading />}>
         {activeTab === 'design-doc' && (
           <DesignDocView
             config={config}
@@ -86,24 +96,25 @@ export default function App() {
             onOpenAI={() => setIsAIOpen(true)}
           />
         )}
+        </Suspense>
       </main>
 
       {/* Geometric Balance Footer */}
-      <footer className="mt-auto bg-white border-t-2 border-slate-900 py-6 text-[10px] uppercase font-bold tracking-widest text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <footer className="mt-auto bg-white border-t border-slate-200 py-5 text-[10px] font-bold tracking-wide text-slate-500">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <span className="bg-slate-900 text-white px-2 py-0.5 font-black text-[10px] tracking-tight">
               CLUBSYNC
             </span>
-            <span>Powered by GitHub Education & Google Workspace Integration</span>
+            <span className="hidden sm:inline">Governance workspace</span>
           </div>
 
-          <div className="flex flex-wrap items-center gap-6">
-            <span className="flex items-center gap-1.5 font-semibold text-slate-700">
+          <div className="flex flex-wrap justify-center items-center gap-4">
+            <span className="hidden sm:flex items-center gap-1.5 font-semibold text-slate-700">
               <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
               SSO Connected (@{config.domain})
             </span>
-            <span className="flex items-center gap-1.5 font-semibold text-slate-700">
+            <span className="hidden sm:flex items-center gap-1.5 font-semibold text-slate-700">
               <span className="w-2 h-2 rounded-full bg-blue-600"></span>
               Backup Enabled ({config.githubOrg})
             </span>
