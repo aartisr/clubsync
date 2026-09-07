@@ -247,6 +247,10 @@ That is the full loop.
 ## The main idea in one sentence
 Google Groups decide who belongs, ClubSync copies that decision into GitHub, and GitHub access stays correct without manual work every time someone joins, changes roles, or leaves.
 
+ClubSync is automated, not manual.
+
+That means a person does not have to run it every time someone joins or leaves. The system watches for changes and updates GitHub on its own.
+
 ## Google Groups vs GitHub organization vs GitHub teams
 
 This part is important because these three things are not the same.
@@ -407,6 +411,43 @@ then the GitHub Team should be:
 - `cs-developers`
 
 This matching is what makes the automation work.
+
+## What ClubSync actually does
+
+ClubSync is just the bridge that keeps Google Groups and GitHub in step with each other.
+
+It does four simple jobs:
+
+1. It checks the Google Groups.
+2. It looks for changes, like a student being added or removed.
+3. It updates the matching GitHub Team.
+4. It writes down what changed so the school can review it later.
+
+### In very plain English
+
+ClubSync does not make club decisions.
+
+It does not choose who belongs in Robotics or CS.
+
+It only copies the school’s decision into GitHub.
+
+### How it works step by step
+
+1. A student is added to a Google Group.
+2. ClubSync sees the new membership.
+3. ClubSync matches the group name to the right GitHub Team.
+4. ClubSync calls GitHub and adds the student to that team.
+5. GitHub gives the student the access that team already has.
+6. ClubSync logs the change.
+7. If the student is removed later, ClubSync does the reverse and removes access.
+
+### Why this middle step matters
+
+Without ClubSync, a person would have to update GitHub by hand every time someone joined or left.
+
+That is slow and easy to get wrong.
+
+With ClubSync, the school only updates the Google Group, and GitHub follows along automatically.
 
 ## Very small setup picture
 

@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320" role="img" aria-labelledby="title desc">
+  <title id="title">ClubSync full flow diagram</title>
+  <desc id="desc">School IT creates Google Groups, club staff manage membership, ClubSync syncs changes, and GitHub Teams receive access.</desc>
+  <defs>
+    <style>
+      .box { fill: #ffffff; stroke: #1f2937; stroke-width: 2; rx: 14; ry: 14; }
+      .label { font-family: Arial, Helvetica, sans-serif; fill: #111827; font-size: 18px; font-weight: 700; }
+      .small { font-family: Arial, Helvetica, sans-serif; fill: #374151; font-size: 14px; }
+      .arrow { stroke: #2563eb; stroke-width: 4; fill: none; marker-end: url(#arrowhead); }
+      .note { font-family: Arial, Helvetica, sans-serif; fill: #0f172a; font-size: 13px; }
+      .title { font-family: Arial, Helvetica, sans-serif; fill: #0f172a; font-size: 24px; font-weight: 700; }
+      .subtitle { font-family: Arial, Helvetica, sans-serif; fill: #475569; font-size: 14px; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb" />
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="320" fill="#f8fafc" />
+  <text x="40" y="38" class="title">ClubSync full flow</text>
+  <text x="40" y="62" class="subtitle">Google Groups decide membership, ClubSync copies the change, GitHub Teams get the access.</text>
+
+  <rect x="40" y="110" width="180" height="90" class="box" />
+  <text x="130" y="145" text-anchor="middle" class="label">School IT</text>
+  <text x="130" y="168" text-anchor="middle" class="small">Creates Google Groups</text>
+
+  <rect x="270" y="110" width="180" height="90" class="box" />
+  <text x="360" y="145" text-anchor="middle" class="label">Club staff</text>
+  <text x="360" y="168" text-anchor="middle" class="small">Add or remove students</text>
+
+  <rect x="500" y="95" width="200" height="120" class="box" />
+  <text x="600" y="135" text-anchor="middle" class="label">ClubSync</text>
+  <text x="600" y="158" text-anchor="middle" class="small">Checks group changes</text>
+  <text x="600" y="180" text-anchor="middle" class="small">Updates GitHub automatically</text>
+
+  <rect x="760" y="110" width="180" height="90" class="box" />
+  <text x="850" y="145" text-anchor="middle" class="label">GitHub Teams</text>
+  <text x="850" y="168" text-anchor="middle" class="small">Give repo access</text>
+
+  <rect x="990" y="110" width="170" height="90" class="box" />
+  <text x="1075" y="145" text-anchor="middle" class="label">Student</text>
+  <text x="1075" y="168" text-anchor="middle" class="small">Gets the right access</text>
+
+  <path d="M220 155 L270 155" class="arrow" />
+  <path d="M450 155 L500 155" class="arrow" />
+  <path d="M700 155 L760 155" class="arrow" />
+  <path d="M940 155 L990 155" class="arrow" />
+
+  <text x="235" y="195" text-anchor="middle" class="note">membership list</text>
+  <text x="475" y="195" text-anchor="middle" class="note">watch + sync</text>
+  <text x="730" y="195" text-anchor="middle" class="note">team access</text>
+  <text x="965" y="195" text-anchor="middle" class="note">work in repos</text>
+
+  <text x="600" y="260" text-anchor="middle" class="subtitle">If someone leaves, ClubSync runs the same path in reverse and removes access.</text>
+</svg>
