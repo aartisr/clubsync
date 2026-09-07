@@ -39,7 +39,7 @@ Answer questions accurately, clearly, and with practical guidance suitable for h
 Context provided: ${JSON.stringify(context || {})}`;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-2.0-flash',
       contents: [
         { role: 'user', parts: [{ text: `${systemInstruction}\n\nUser Question: ${prompt}` }] }
       ]
@@ -71,7 +71,7 @@ ${scriptCode}
 Provide the complete updated code snippet along with a brief 2-bullet explanation of the modifications made.`;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-2.0-flash',
       contents: [{ role: 'user', parts: [{ text: prompt }] }]
     });
 
