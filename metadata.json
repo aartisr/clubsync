@@ -1,6 +1,6 @@
 {
   "name": "ClubSync: GitHub Education Multi-Club Governance Portal",
-  "description": "PCSS II GitHub Education & Google Workspace Governance Portal with interactive diagrams, @pioneercss.org email options, automation scripts, and executive proposals.",
+  "description": "PCSS II GitHub Education & Google Workspace Governance Portal with interactive diagrams, @pioneercss.org options, automation scripts, IT setup guides, and executive proposals.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

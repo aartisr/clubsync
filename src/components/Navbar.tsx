@@ -35,7 +35,8 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'simulator', label: 'Onboarding simulator', shortLabel: 'Simulate', icon: <PlayCircle className="w-4 h-4" /> },
     { id: 'permission-matrix', label: 'Permission matrix', shortLabel: 'Access', icon: <ShieldCheck className="w-4 h-4" /> },
     { id: 'handover', label: 'Handover wizard', shortLabel: 'Handover', icon: <GraduationCap className="w-4 h-4" /> },
-    { id: 'proposal', label: 'School proposal', shortLabel: 'Proposal', icon: <FileText className="w-4 h-4" /> }
+    { id: 'proposal', label: 'School proposal', shortLabel: 'Proposal', icon: <FileText className="w-4 h-4" /> },
+    { id: 'it-guide', label: 'IT implementation guide', shortLabel: 'IT Setup', icon: <ShieldCheck className="w-4 h-4" /> }
   ];
 
   return (

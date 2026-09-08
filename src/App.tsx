@@ -11,6 +11,7 @@ const OnboardingSimulator = lazy(() => import('./components/OnboardingSimulator'
 const PermissionMatrixView = lazy(() => import('./components/PermissionMatrixView').then(({ PermissionMatrixView }) => ({ default: PermissionMatrixView })));
 const HandoverWizardView = lazy(() => import('./components/HandoverWizardView').then(({ HandoverWizardView }) => ({ default: HandoverWizardView })));
 const ProposalGeneratorView = lazy(() => import('./components/ProposalGeneratorView').then(({ ProposalGeneratorView }) => ({ default: ProposalGeneratorView })));
+const ITImplementationView = lazy(() => import('./components/ITImplementationView').then(({ ITImplementationView }) => ({ default: ITImplementationView })));
 
 const WorkspaceLoading = () => (
   <div className="mx-auto flex min-h-56 max-w-7xl items-center px-4 sm:px-6 lg:px-8" role="status" aria-live="polite">
@@ -94,6 +95,12 @@ export default function App() {
           <ProposalGeneratorView
             config={config}
             onOpenAI={() => setIsAIOpen(true)}
+          />
+        )}
+        
+        {activeTab === 'it-guide' && (
+          <ITImplementationView
+            config={config}
           />
         )}
         </Suspense>

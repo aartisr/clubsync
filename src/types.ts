@@ -10,7 +10,8 @@ export type NavigationTab =
   | 'simulator'
   | 'permission-matrix'
   | 'handover'
-  | 'proposal';
+  | 'proposal'
+  | 'it-guide';
 
 export type PermissionLevel = 'admin' | 'maintain' | 'write' | 'triage' | 'read' | 'none';
 
