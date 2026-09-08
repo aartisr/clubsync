@@ -14,8 +14,8 @@ This document provides definitive, zero-trial-and-error implementation steps for
 **Time:** 5 Mins Apply | 1-5 Days Approval
 **Objective:** Upgrade to GitHub Enterprise for free to unlock SAML SSO.
 
-1.  **Apply:** Navigate to [education.github.com/institutions](https://education.github.com/institutions).
-2.  **Selection:** Choose "GitHub Campus Program".
+1.  **Apply:** Navigate to [education.github.com/benefits](https://education.github.com/benefits).
+2.  **Selection:** Select the **"Schools"** tab and click **"Get GitHub benefits for your school"**.
 3.  **Documentation:** Provide a school-issued ID/employment letter and the official domain (`pioneercss.org`).
 
 **Outcome:** Institutional Enterprise Account with the ability to create free Organizations.

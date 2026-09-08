@@ -18,8 +18,8 @@ export const IT_STEPS: ITStep[] = [
     duration: '5 Mins Apply | 1-5 Days Approval',
     description: 'GitHub Education provides GitHub Enterprise Cloud for free to schools. This is required for SAML SSO (logging in with @pioneercss.org).',
     actions: [
-      'Navigate to education.github.com/institutions',
-      'Select "GitHub Campus Program"',
+      'Navigate to education.github.com/benefits',
+      'Select the "Schools" tab and click "Get GitHub benefits for your school"',
       'Provide school ID/Employment letter and domain (pioneercss.org)'
     ],
     owner: 'IT Director / Faculty Sponsor',
