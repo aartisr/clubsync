@@ -4,6 +4,9 @@
  */
 
 export type NavigationTab = 
+  | 'repositories'
+  | 'oversight'
+  | 'contributions'
   | 'design-doc'
   | 'diagrams'
   | 'scripts'
@@ -11,7 +14,108 @@ export type NavigationTab =
   | 'permission-matrix'
   | 'handover'
   | 'proposal'
-  | 'it-guide';
+  | 'it-guide'
+  | 'vercel-deploy';
+
+export type UserRole = 'student_member' | 'club_lead' | 'faculty_advisor' | 'it_admin';
+
+export interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  subteam: string;
+  avatarUrl?: string;
+}
+
+export interface BranchPermissionRule {
+  id: string;
+  branchPattern: string; // e.g. 'main', 'dev', 'release/*'
+  protectionEnabled: boolean;
+  requirePR: boolean;
+  requiredReviewers: number;
+  enforceLinearHistory: boolean;
+  restrictPushRoles: UserRole[];
+  allowedPushEmails: string[];
+  preventForcePush: boolean;
+  preventDeletion: boolean;
+  requireSecretScanning: boolean;
+  updatedBy: string;
+  updatedAt: string;
+}
+
+export interface RepositoryItem {
+  id: string;
+  name: string;
+  slug: string;
+  subteam: string;
+  clubOwnerId: string;
+  creator: {
+    name: string;
+    email: string;
+    role: UserRole;
+  };
+  description: string;
+  visibility: 'private' | 'public';
+  isPublicRequested: boolean;
+  isPublicApproved: boolean;
+  advisorApprovedBy?: string;
+  masterAccessEnforced: boolean; // Always true for leaders & faculty advisors
+  branchRules: BranchPermissionRule[];
+  defaultBranch: string;
+  starsCount: number;
+  forksCount: number;
+  openIssuesCount: number;
+  openPRsCount: number;
+  healthScore: number; // 0 - 100
+  createdAt: string;
+  updatedAt: string;
+  topics: string[];
+}
+
+export interface ContributionMetric {
+  id: string;
+  userId: string;
+  userName: string;
+  userEmail: string;
+  userRole: UserRole;
+  avatarUrl: string;
+  subteam: string;
+  commitsCount: number;
+  prsOpened: number;
+  prsMerged: number;
+  codeReviewsCount: number;
+  linesAdded: number;
+  linesDeleted: number;
+  weeklyActivity: number[]; // 7 days of commits
+  lastActive: string;
+  topRepo: string;
+}
+
+export interface AuditLogEvent {
+  id: string;
+  timestamp: string;
+  action: 'repo_created' | 'branch_protected' | 'master_override' | 'public_requested' | 'public_approved' | 'force_push_blocked' | 'access_revoked';
+  performedBy: string;
+  performedRole: UserRole;
+  repositoryName: string;
+  details: string;
+  severity: 'info' | 'notice' | 'warning' | 'master_override';
+}
+
+export interface VercelDeploymentStatus {
+  deploymentId: string;
+  state: 'BUILDING' | 'READY' | 'ERROR';
+  target: 'staging' | 'production';
+  url: string;
+  createdAt: string;
+  buildTimeMs: number;
+  branch: string;
+  commitHash: string;
+  commitMessage: string;
+  environmentVarsVerified: boolean;
+  logs: string[];
+}
 
 export type PermissionLevel = 'admin' | 'maintain' | 'write' | 'triage' | 'read' | 'none';
 

@@ -105,7 +105,7 @@ export const AIAssistantDrawer: React.FC<AIAssistantDrawerProps> = ({ isOpen, on
             </div>
             <div>
               <h3 className="font-black text-sm uppercase tracking-tight text-white">AI Architecture Advisor</h3>
-              <p className="text-[10px] font-mono uppercase font-bold text-slate-400">Powered by Gemini 2.5 Flash</p>
+              <p className="text-[10px] font-mono uppercase font-bold text-slate-400">Google AI Assistant</p>
             </div>
           </div>
           <button
