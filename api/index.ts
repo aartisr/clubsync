@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { GoogleGenAI } from '@google/genai';
+import type { GoogleGenAI } from '@google/genai';
 import { INITIAL_REPOSITORIES, INITIAL_CONTRIBUTIONS, INITIAL_AUDIT_LOGS, INITIAL_VERCEL_DEPLOYMENT } from '../src/data/repositoryData';
 
 const app = express();
@@ -11,14 +11,17 @@ let contributionsData = [...INITIAL_CONTRIBUTIONS];
 let auditLogsData = [...INITIAL_AUDIT_LOGS];
 let vercelStatusData = { ...INITIAL_VERCEL_DEPLOYMENT };
 
-// Lazy initialization of Gemini API Client
+// Lazy initialization of the optional Gemini client.  Keeping the SDK out of
+// the serverless function's module-load path means repository endpoints still
+// start when no AI key is configured (or the AI SDK is unavailable).
 let genAI: GoogleGenAI | null = null;
-function getGeminiClient(): GoogleGenAI {
+async function getGeminiClient(): Promise<GoogleGenAI> {
   if (!genAI) {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
       throw new Error('GEMINI_API_KEY environment variable is not configured.');
     }
+    const { GoogleGenAI } = await import('@google/genai');
     genAI = new GoogleGenAI({ apiKey });
   }
   return genAI;
@@ -575,7 +578,7 @@ router.post('/ai/chat', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Prompt is required' });
     }
 
-    const ai = getGeminiClient();
+    const ai = await getGeminiClient();
     const systemInstruction = `You are ClubSync AI, an expert school IT systems architect specializing in GitHub Enterprise / Education, Google Workspace API Admin SDKs, SAML 2.0 SSO, and student club organization governance.
 Answer questions accurately, clearly, and with practical guidance suitable for high school / university club leaders and school IT directors.
 Context provided: ${JSON.stringify(context || {})}`;
@@ -599,7 +602,7 @@ router.post('/ai/customize-script', async (req: Request, res: Response) => {
   try {
     const { scriptId, scriptCode, customRequirements, schoolDomain, githubOrg } = req.body;
 
-    const ai = getGeminiClient();
+    const ai = await getGeminiClient();
     const prompt = `Customize the following automation script for a school GitHub organization:
 School Domain: ${schoolDomain}
 GitHub Organization: ${githubOrg}
