@@ -284,4 +284,4 @@ Contributions, feedback, and suggestions are welcome! Please feel free to open a
 
 ## License
 
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+This project is licensed under the ***MIT License*** — see the [LICENSE](LICENSE) file for details.
