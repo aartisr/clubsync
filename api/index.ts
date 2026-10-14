@@ -1,6 +1,8 @@
 import express, { Request, Response } from 'express';
 import type { GoogleGenAI } from '@google/genai';
-import { INITIAL_REPOSITORIES, INITIAL_CONTRIBUTIONS, INITIAL_AUDIT_LOGS, INITIAL_VERCEL_DEPLOYMENT } from '../src/data/repositoryData';
+// Vercel executes this function as native ESM, which requires an explicit
+// runtime extension for local module imports.
+import { INITIAL_REPOSITORIES, INITIAL_CONTRIBUTIONS, INITIAL_AUDIT_LOGS, INITIAL_VERCEL_DEPLOYMENT } from '../src/data/repositoryData.js';
 
 const app = express();
 app.use(express.json());
